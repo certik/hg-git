@@ -21,6 +21,13 @@ class GitHandler(object):
     def __init__(self, dest_repo, ui):
         self.repo = dest_repo
         self.ui = ui
+        if not hasattr(self.ui, "progress"):
+            def progress(text, i, total=0, unit=''):
+                if i is None:
+                    print "%s" % (text)
+                else:
+                    print "%s: %d/%d %s" % (text, i, total, unit)
+            self.ui.progress = progress
 
         if ui.config('git', 'intree'):
             self.gitdir = self.repo.wjoin('.git')
